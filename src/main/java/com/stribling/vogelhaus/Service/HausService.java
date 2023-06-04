@@ -1,0 +1,54 @@
+package com.stribling.vogelhaus.Service;
+
+import com.stribling.vogelhaus.Entity.Haus;
+import com.stribling.vogelhaus.Model.HausModel;
+import com.stribling.vogelhaus.RNF.ResourceNotFoundException;
+import com.stribling.vogelhaus.Repository.HausRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class HausService {
+    @Autowired
+    private HausRepository hausRepository;
+
+    //Create
+    public Haus createHaus(HausModel hausModel) {
+        Haus haus = new Haus(hausModel);
+        return hausRepository.save(haus);
+    }
+    //Read
+    public List<Haus> getAllHauses() {
+        return this.hausRepository.findAll();
+    }
+    //Read by id
+    public Haus getHausById(Long hausId) {
+
+        Optional<Haus> haus = this.hausRepository.findById(hausId);
+
+        if(haus.isPresent()) {
+            return haus.get();
+        }else {
+            throw new ResourceNotFoundException("Record not found with id : " + hausId);
+        }
+    }
+    //Update
+    public Haus updateHaus(HausModel hausModel) {
+        Optional<Haus> hausDB = this.hausRepository.findById(hausModel.getId());
+
+        if(hausDB.isPresent()) {
+            Haus hausUpdate = hausDB.get();
+            hausUpdate.setId(hausModel);
+            hausUpdate.setName(hausModel);
+            hausUpdate.setAddress(hausModel);
+            hausRepository.save(hausUpdate);
+            return hausUpdate;
+        }else {
+            throw new ResourceNotFoundException("Record not found with id : " + hausModel.getId());
+        }
+    }
+    //Delete
+}
