@@ -4,6 +4,7 @@ import com.stribling.vogelhaus.Entity.Haus;
 import com.stribling.vogelhaus.Model.HausModel;
 import com.stribling.vogelhaus.Service.HausService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,5 +35,10 @@ public class HausController {
     @GetMapping("/hauses/{id}")
     public Haus getHausById(@PathVariable Long id){
         return hausService.getHausById(id);
+    }
+    @DeleteMapping("/hauses/{id}")
+    public HttpStatus deleteHaus(@PathVariable Long id){
+        this.hausService.deleteHaus(id);
+        return HttpStatus.OK;
     }
 }

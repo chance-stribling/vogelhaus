@@ -18,7 +18,15 @@ public class HausService {
     //Create
     public Haus createHaus(HausModel hausModel) {
         Haus haus = new Haus(hausModel);
-        return hausRepository.save(haus);
+        Optional<Haus> dupe = this.hausRepository.findByName(hausModel.getName());
+        Optional<Haus> dupe2 = this.hausRepository.findByAddress(hausModel.getName());
+
+        if (dupe.isPresent() || (dupe2.isPresent())){
+            return null;
+        }
+        else {
+            return hausRepository.save(haus);
+        }
     }
     //Read
     public List<Haus> getAllHauses() {
@@ -51,4 +59,14 @@ public class HausService {
         }
     }
     //Delete
+    public void deleteHaus(Long hausId) {
+        Optional<Haus> hausDb = this.hausRepository.findById(hausId);
+
+        if(hausDb.isPresent()) {
+            this.hausRepository.delete(hausDb.get());
+        }else {
+            throw new ResourceNotFoundException("Record not found with id : " + hausId);
+        }
+
+    }
 }
